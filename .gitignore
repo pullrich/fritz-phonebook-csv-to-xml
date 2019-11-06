@@ -1,0 +1,4 @@
+# Ignore these folders:
+.mypy_cache/
+.vscode/
+venv/
