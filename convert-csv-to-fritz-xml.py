@@ -73,27 +73,27 @@ def build_phonebook(
 def make_all(input_file: str, output_file: str):
     expected_column_headers: List[str] = ["realName", "home-number", "mobile-number"]
 
-    with open(input_file, newline="") as csvfile:
-        data_reader = csv.DictReader(
-            csvfile, delimiter=",", quotechar='"'
-        )  # TODO: Make these configurable.
+    print("Running make_all()")
 
-        success, missing_columns = all_expected_columns_present_in_csv(
-            data_reader, expected_column_headers
-        )
-        if success:
-            print("Good! All expected columns are present.")
-        else:
-            sys.exit(
-                "Fail! Missing columns: {0} - stopping execution".format(
-                    missing_columns
-                )
-            )
+    # with open(input_file, newline="") as csvfile:
+    #     data_reader = csv.DictReader(
+    #         csvfile, delimiter=",", quotechar='"'
+    #     )  # TODO: Make these configurable.
+
+    #     success, missing_columns = all_expected_columns_present_in_csv(
+    #         data_reader, expected_column_headers
+    #     )
+    #     if success:
+    #         print("Good! All expected columns are present.")
+    #     else:
+    #         sys.exit(
+    #             "Fail! Missing columns: {0} - stopping execution".format(
+    #                 missing_columns
+    #             )
+    #         )
 
         # all_contacts = contacts_from_csv(data_reader)
         # print("Found {count} contacts".format(count=len(all_contacts)))
-
-    pass
 
 
 if __name__ == "__main__":
