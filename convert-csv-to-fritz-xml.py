@@ -10,8 +10,8 @@ PhonebookName = NewType("PhonebookName", str)
 class Contact:
     def __init__(self):
         self.realName = ''
-        #self.home-number = ''
-        #self.work-number = ''
+        self.home_number = ''
+        self.work_number = ''
 
     # def __str__(self):
     #     return self.__repr__()
@@ -63,12 +63,16 @@ def all_expected_columns_present_in_csv(
     diff_list = numpy.setdiff1d(expected_column_headers, csv_dict_reader.fieldnames)
     return len(diff_list) == 0, diff_list
 
-def contacts_from_csv(data_reader):
+def contacts_from_csv(data_reader: csv.DictReader):
     res = list()
-    c = Contact()
-    c.realName = "Test"
-    print(c)
-    res.append(c)
+    for row in data_reader:
+        c = Contact()
+        c.realName = row['realName']
+        c.home_number = row['home-number']
+        c.work_number = row['mobile-number']
+        res.append(c)
+        print(c)
+
     return res
 
 def build_phonebook(
