@@ -45,6 +45,9 @@ def all_expected_columns_present_in_csv(
     Returns False and a list of string if there are column headers missing. The list contains the missing column names.
     """
 
+    #print(csv_dict_reader.fieldnames)
+    #print(list(map(lambda name: name.lower(), csv_dict_reader.fieldnames)))
+
     diff_list = numpy.setdiff1d(expected_column_headers, csv_dict_reader.fieldnames)
     return len(diff_list) == 0, diff_list
 
@@ -75,22 +78,22 @@ def make_all(input_file: str, output_file: str):
 
     print("Running make_all()")
 
-    # with open(input_file, newline="") as csvfile:
-    #     data_reader = csv.DictReader(
-    #         csvfile, delimiter=",", quotechar='"'
-    #     )  # TODO: Make these configurable.
+    with open(input_file, newline="") as csvfile:
+        data_reader = csv.DictReader(
+            csvfile, delimiter=",", quotechar='"'
+        )  # TODO: Make these configurable.
 
-    #     success, missing_columns = all_expected_columns_present_in_csv(
-    #         data_reader, expected_column_headers
-    #     )
-    #     if success:
-    #         print("Good! All expected columns are present.")
-    #     else:
-    #         sys.exit(
-    #             "Fail! Missing columns: {0} - stopping execution".format(
-    #                 missing_columns
-    #             )
-    #         )
+        success, missing_columns = all_expected_columns_present_in_csv(
+            data_reader, expected_column_headers
+        )
+        if success:
+            print("Good! All expected columns are present.")
+        else:
+            sys.exit(
+                "Fail! Missing columns: {0} - stopping execution".format(
+                    missing_columns
+                )
+            )
 
         # all_contacts = contacts_from_csv(data_reader)
         # print("Found {count} contacts".format(count=len(all_contacts)))
