@@ -7,17 +7,18 @@ from typing import List, Dict, Any, Tuple, Union, Callable, NewType
 
 PhonebookName = NewType("PhonebookName", str)
 
+
 class Contact:
     def __init__(self):
-        self.realName = ''
-        self.home_number = ''
-        self.work_number = ''
+        self.realName = ""
+        self.home_number = ""
+        self.mobile_number = ""
 
     # def __str__(self):
     #     return self.__repr__()
 
     def __repr__(self):
-        return str('Contact: ' + self.realName)
+        return str("Contact: " + self.realName)
 
 
 class Template:
@@ -31,7 +32,8 @@ class Template:
 </phonebooks>
 """
 
-    def contact(self) -> str:
+    @staticmethod
+    def contact() -> str:
         return """
         <contact>
             <category>0</category>
@@ -39,8 +41,8 @@ class Template:
                 <realName>{real-name}</realName>
             </person>
             <telephony nid="3">
-                <number type="home" vanity="" prio="1" id="0">{home-phone-number}</number>
-                <number type="mobile" vanity="" prio="0" id="1">{mobile-phone-number}</number>
+                <number type="home" vanity="" prio="1" id="0">{home-number}</number>
+                <number type="mobile" vanity="" prio="0" id="1">{mobile-number}</number>
                 <number type="work" vanity="" prio="" id="2"></number>
             </telephony>
             <services />
@@ -57,23 +59,24 @@ def all_expected_columns_present_in_csv(
     Returns False and a list of string if there are column headers missing. The list contains the missing column names.
     """
 
-    #print(csv_dict_reader.fieldnames)
-    #print(list(map(lambda name: name.lower(), csv_dict_reader.fieldnames)))
+    # print(csv_dict_reader.fieldnames)
+    # print(list(map(lambda name: name.lower(), csv_dict_reader.fieldnames)))
 
     diff_list = numpy.setdiff1d(expected_column_headers, csv_dict_reader.fieldnames)
     return len(diff_list) == 0, diff_list
+
 
 def contacts_from_csv(data_reader: csv.DictReader):
     res = list()
     for row in data_reader:
         c = Contact()
-        c.realName = row['realName']
-        c.home_number = row['home-number']
-        c.work_number = row['mobile-number']
+        c.realName = row["realName"]
+        c.home_number = row["home-number"]
+        c.mobile_number = row["mobile-number"]
         res.append(c)
-        print(c)
 
     return res
+
 
 def build_phonebook(
     phonebook_name: PhonebookName, phonebook_template: str, contacts_block: str
@@ -81,6 +84,20 @@ def build_phonebook(
     return phonebook_template.replace("{phonebook-name}", phonebook_name).replace(
         "{contacts-will-be-placed-here}", contacts_block
     )
+
+
+def replace_placeholder_in_contact_xml_template(
+    xml_template: str, contacts: List[Contact]
+) -> List[str]:
+    res = list()
+    for c in contacts:
+        res.append(
+            xml_template.replace("{real-name}", c.realName)
+            .replace("{home-number}", c.home_number)
+            .replace("{mobile-number}", c.mobile_number)
+        )
+
+    return res
 
 
 @click.command()
@@ -119,8 +136,12 @@ def make_all(input_file: str, output_file: str):
             )
 
         all_contacts = contacts_from_csv(data_reader)
-        print("Found {count} contacts".format(count=len(all_contacts)))
-        print(all_contacts)
+        # print("Found {count} contacts".format(count=len(all_contacts)))
+        # print(all_contacts)
+        xml_contacts = replace_placeholder_in_contact_xml_template(
+            Template.contact(), all_contacts
+        )
+        print(xml_contacts)
 
 
 if __name__ == "__main__":
