@@ -7,6 +7,18 @@ from typing import List, Dict, Any, Tuple, Union, Callable, NewType
 
 PhonebookName = NewType("PhonebookName", str)
 
+class Contact:
+    def __init__(self):
+        self.realName = ''
+        #self.home-number = ''
+        #self.work-number = ''
+
+    # def __str__(self):
+    #     return self.__repr__()
+
+    def __repr__(self):
+        return str('Contact: ' + self.realName)
+
 
 class Template:
     def base(self) -> str:
@@ -51,6 +63,13 @@ def all_expected_columns_present_in_csv(
     diff_list = numpy.setdiff1d(expected_column_headers, csv_dict_reader.fieldnames)
     return len(diff_list) == 0, diff_list
 
+def contacts_from_csv(data_reader):
+    res = list()
+    c = Contact()
+    c.realName = "Test"
+    print(c)
+    res.append(c)
+    return res
 
 def build_phonebook(
     phonebook_name: PhonebookName, phonebook_template: str, contacts_block: str
@@ -95,8 +114,9 @@ def make_all(input_file: str, output_file: str):
                 )
             )
 
-        # all_contacts = contacts_from_csv(data_reader)
-        # print("Found {count} contacts".format(count=len(all_contacts)))
+        all_contacts = contacts_from_csv(data_reader)
+        print("Found {count} contacts".format(count=len(all_contacts)))
+        print(all_contacts)
 
 
 if __name__ == "__main__":
