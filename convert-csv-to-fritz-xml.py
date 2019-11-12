@@ -104,6 +104,12 @@ def replace_placeholder_in_contact_xml_template(
 
 @click.command()
 @click.option(
+    "-phonebook_name",
+    type=click.STRING,
+    help="The name for the resulting Fritz phonebook. This will be displayed also in your handheld device.",
+    required=True,
+)
+@click.option(
     "-input_file",
     type=click.Path(exists=True, readable=True, resolve_path=True),
     help="CSV input file",
@@ -115,11 +121,10 @@ def replace_placeholder_in_contact_xml_template(
     help="Fritz phone book output file",
     required=False,
 )
-def make_all(input_file: str, output_file: str):
-    expected_column_headers: List[str] = ["realName", "home-number", "mobile-number"]
+def make_all(input_file: str, output_file: str, phonebook_name: str):
+    expected_column_headers: List[str] = ["realName", "home-number", "mobile-number"] # TODO: Change to one source of truth. Don't deal with these strings all the time.
     all_contacts: List[Contact] = []
-
-    print("Running make_all()")
+    res_phonebook_name = PhonebookName(phonebook_name)
 
     with open(input_file, mode='r', newline="") as csvfile:
         data_reader = csv.DictReader(
@@ -146,10 +151,10 @@ def make_all(input_file: str, output_file: str):
     xml_contacts = replace_placeholder_in_contact_xml_template(
         Template.contact(), all_contacts
     )
-    #print(xml_contacts)
+    # print(xml_contacts)
 
-    phonebook_xml = build_phonebook(PhonebookName("Test"), Template.base(), "".join(xml_contacts)) # TODO: Add to arguments.
-    print(phonebook_xml)
+    phonebook_xml = build_phonebook(res_phonebook_name, Template.base(), "".join(xml_contacts)) # TODO: Add to arguments.
+    # print(phonebook_xml)
 
     with open(output_file, mode='w', newline="") as xml_file:
         xml_file.write(phonebook_xml)

@@ -2,3 +2,6 @@
 .mypy_cache/
 .vscode/
 venv/
+
+# Ignore produced test files:
+test-data.xml
