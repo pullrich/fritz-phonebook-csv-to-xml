@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phonebooks>
+    <phonebook owner="1" name="Test">
+        
+        <contact>
+            <category>0</category>
+            <person>
+                <realName>P. Erson1</realName>
+            </person>
+            <telephony nid="3">
+                <number type="home" vanity="" prio="1" id="0">01</number>
+                <number type="mobile" vanity="" prio="0" id="1">+49 01</number>
+                <number type="work" vanity="" prio="" id="2"></number>
+            </telephony>
+            <services />
+            <setup />
+            <uniqueid></uniqueid>
+        </contact>
+        
+        <contact>
+            <category>0</category>
+            <person>
+                <realName>P. Erson2</realName>
+            </person>
+            <telephony nid="3">
+                <number type="home" vanity="" prio="1" id="0">02</number>
+                <number type="mobile" vanity="" prio="0" id="1">+49 02</number>
+                <number type="work" vanity="" prio="" id="2"></number>
+            </telephony>
+            <services />
+            <setup />
+            <uniqueid></uniqueid>
+        </contact>
+        
+    </phonebook>
+</phonebooks>

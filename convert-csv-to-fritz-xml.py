@@ -22,7 +22,9 @@ class Contact:
 
 
 class Template:
-    def base(self) -> str:
+
+    @staticmethod
+    def base() -> str:
         # We have to start with the XML declaration on the first line, or we would get invalid XML.
         return """<?xml version="1.0" encoding="utf-8"?>
 <phonebooks>
@@ -115,10 +117,11 @@ def replace_placeholder_in_contact_xml_template(
 )
 def make_all(input_file: str, output_file: str):
     expected_column_headers: List[str] = ["realName", "home-number", "mobile-number"]
+    all_contacts: List[Contact] = []
 
     print("Running make_all()")
 
-    with open(input_file, newline="") as csvfile:
+    with open(input_file, mode='r', newline="") as csvfile:
         data_reader = csv.DictReader(
             csvfile, delimiter=",", quotechar='"'
         )  # TODO: Make these configurable.
@@ -136,13 +139,21 @@ def make_all(input_file: str, output_file: str):
             )
 
         all_contacts = contacts_from_csv(data_reader)
-        # print("Found {count} contacts".format(count=len(all_contacts)))
-        # print(all_contacts)
-        xml_contacts = replace_placeholder_in_contact_xml_template(
-            Template.contact(), all_contacts
-        )
-        print(xml_contacts)
+        # All contacts have been read. File can be closed.
 
+    # print("Found {count} contacts".format(count=len(all_contacts)))
+    # print(all_contacts)
+    xml_contacts = replace_placeholder_in_contact_xml_template(
+        Template.contact(), all_contacts
+    )
+    #print(xml_contacts)
+
+    phonebook_xml = build_phonebook(PhonebookName("Test"), Template.base(), "".join(xml_contacts)) # TODO: Add to arguments.
+    print(phonebook_xml)
+
+    with open(output_file, mode='w', newline="") as xml_file:
+        xml_file.write(phonebook_xml)
+    
 
 if __name__ == "__main__":
     make_all()  # pylint: disable=no-value-for-parameter
